@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HTTP Status Codes Demo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="intro">
+      <h1>HTTP Status Codes Demo</h1>
+      <p class="tagline">How to View HTTP Status Codes</p>
+      <p class="lede">Pick a scenario, submit, then check the <strong>Network</strong> tab in Chrome DevTools.</p>
+    </header>
+
+    <main class="card">
+      <form id="demo-form">
+        <div class="field">
+          <label for="scenario">Scenario</label>
+          <select id="scenario" name="scenario" required>
+            <option value="" disabled selected>Choose a scenario&hellip;</option>
+            <option value="login-success">Successful login (200)</option>
+            <option value="account-created">New account created (201)</option>
+            <option value="redirected">Redirected to new page (301)</option>
+            <option value="missing-field">Missing required field (400)</option>
+            <option value="wrong-password">Wrong password (401)</option>
+            <option value="forbidden">Access a forbidden resource (403)</option>
+            <option value="user-not-found">Lookup a user that doesn't exist (404)</option>
+            <option value="rate-limited">Too many requests (429)</option>
+            <option value="server-error">Trigger a server bug (500)</option>
+            <option value="maintenance">Site under maintenance (503)</option>
+          </select>
+        </div>
+
+        <div id="scenario-fields" hidden></div>
+
+        <button type="submit">Submit</button>
+      </form>
+
+      <details id="result" hidden>
+        <summary>View response</summary>
+        <div class="result-content">
+          <p id="result-status" class="status-badge"></p>
+          <p id="result-message"></p>
+          <div id="result-definition" class="definition" hidden>
+            <span class="definition-label">What this status code means</span>
+            <p class="definition-text" id="result-definition-text"></p>
+          </div>
+          <p id="result-tip"></p>
+        </div>
+      </details>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "httpcodes-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Demo backend for the HTTP status codes / Chrome DevTools training video",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

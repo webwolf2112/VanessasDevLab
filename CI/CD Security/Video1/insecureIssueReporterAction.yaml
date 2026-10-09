@@ -1,0 +1,30 @@
+# ⚠️ INTENTIONALLY INSECURE: demo file for CI/CD Security Video 1. Do not use.
+name: New PR Reporter
+
+on:
+  pull_request:
+    types: [opened]
+
+# MISTAKE 2: no permissions: block, so GITHUB_TOKEN gets the repo's default permissions
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+
+    # MISTAKE 1: a secret typed straight into the YAML (fake value)
+    env:
+      NOTIFY_API_KEY: "fake-demo-key-do-not-use-1234567890"
+
+    steps:
+      # MISTAKE 4: attacker-controlled PR title inserted directly into a shell command
+      - name: Log the new PR
+        run: |
+          echo "New PR opened: ${{ github.event.pull_request.title }}"
+
+      # MISTAKE 3: action pinned to a movable tag (@v4) instead of a commit SHA
+      - name: Welcome the contributor
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Thanks for the PR, @${{ github.actor }}! We'll take a look soon.

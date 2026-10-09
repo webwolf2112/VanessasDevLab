@@ -1,0 +1,25 @@
+name: New Issue Reporter
+
+on:
+  issues:
+    types: [opened]
+
+# Limit GITHUB_TOKEN to only what this workflow needs: commenting on issues
+permissions:
+  issues: write
+
+jobs:
+  auto-comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Welcome new issue reporter
+        # Pinned to the last known-safe commit SHA before the compromise
+        uses: actions-cool/issues-helper@25379ae1ea683ac484497214db131ab8f003a52b
+        with:
+          actions: 'create-comment'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            Hello @${{ github.actor }}, thanks for opening this issue! We'll take a look soon.
+
+    # No env block: AWS secrets were removed because posting a comment doesn't need them
