@@ -5,23 +5,23 @@ on:
   pull_request:
     types: [opened]
 
-# MISTAKE 2: no permissions: block, so GITHUB_TOKEN gets the repo's default permissions
+# MISTAKE 1: no permissions: block, so GITHUB_TOKEN gets the repo's default permissions
 
 jobs:
   welcome:
     runs-on: ubuntu-latest
 
-    # MISTAKE 1: a secret typed straight into the YAML (fake value)
+    # MISTAKE 2: a secret typed straight into the YAML (fake value)
     env:
       NOTIFY_API_KEY: "fake-demo-key-do-not-use-1234567890"
 
     steps:
-      # MISTAKE 4: attacker-controlled PR title inserted directly into a shell command
+      # MISTAKE 3: attacker-controlled PR title inserted directly into a shell command
       - name: Log the new PR
         run: |
           echo "New PR opened: ${{ github.event.pull_request.title }}"
 
-      # MISTAKE 3: action pinned to a movable tag (@v4) instead of a commit SHA
+      # MISTAKE 4: action pinned to a movable tag (@v4) instead of a commit SHA
       - name: Welcome the contributor
         uses: peter-evans/create-or-update-comment@v4
         with:

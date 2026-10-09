@@ -1,25 +1,35 @@
-name: New Issue Reporter
+# ✅ SECURE: fixed version of insecureIssueReporterAction.yaml for CI/CD Security Video 1.
+name: New PR Reporter
 
 on:
-  issues:
+  pull_request:
     types: [opened]
 
-# Limit GITHUB_TOKEN to only what this workflow needs: commenting on issues
-permissions:
-  issues: write
+# FIX 1: start GITHUB_TOKEN with no permissions, then grant only what's needed
+permissions: {}
 
 jobs:
-  auto-comment:
+  welcome:
     runs-on: ubuntu-latest
-    steps:
-      - name: Welcome new issue reporter
-        # Pinned to the last known-safe commit SHA before the compromise
-        uses: actions-cool/issues-helper@25379ae1ea683ac484497214db131ab8f003a52b
-        with:
-          actions: 'create-comment'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            Hello @${{ github.actor }}, thanks for opening this issue! We'll take a look soon.
 
-    # No env block: AWS secrets were removed because posting a comment doesn't need them
+    # FIX 2: no secret in the YAML. Nothing here uses NOTIFY_API_KEY, so it's gone.
+    # If a step ever needs it, store it as a repo secret and pass it only to that step:
+    #   env:
+    #     NOTIFY_API_KEY: ${{ secrets.NOTIFY_API_KEY }}
+
+    steps:
+      # FIX 3: PR title passed in as an environment variable, then quoted in the shell,
+      # so it's treated as text instead of being pasted into the command
+      - name: Log the new PR
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          echo "New PR opened: $PR_TITLE"
+
+      # FIX 4: action pinned to a full commit SHA (v4.0.0), which can't be moved like a tag
+      - name: Welcome the contributor
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Thanks for the PR, @${{ github.actor }}! We'll take a look soon.
